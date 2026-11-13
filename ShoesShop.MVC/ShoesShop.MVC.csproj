@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>13e2d1f1-0266-4b0f-a49d-0f7e6748ecaf</UserSecretsId>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ShoesShop.Api\ShoesShop.Api.csproj" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.36.0" />
+	</ItemGroup>
+
+</Project>

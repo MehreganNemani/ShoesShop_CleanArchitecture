@@ -1,0 +1,118 @@
+﻿@model ProductTagIndexVM
+@{
+	ViewData["Title"] = "Product Tags Management";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	int rowNumbers = 1;
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+@if (TempData["Error"] != null)
+{
+	<div class="alert alert-danger">
+		@TempData["Error"]
+	</div>
+}
+
+@if (TempData["Success"] != null)
+{
+	<div class="alert alert-success">
+		@TempData["Success"]
+	</div>
+}
+
+@if (Model.ProductInfo != null)
+{
+	<div class="card mb-3">
+		<div class="card-body">
+			<h5 class="card-title">
+				Product Name => @Model.ProductInfo.ProductName
+			</h5>
+			<p class="card-text">
+				Product Code => @Model.ProductInfo.ProductCode
+			</p>
+		</div>
+	</div>
+}
+
+<div class="container mt-4">
+	<h4>Add New Tag</h4>
+	<form asp-area="Admin" asp-controller="ProductTag" asp-action="Add" method="post">
+		@Html.AntiForgeryToken()
+		<input type="hidden" name="productId" value="@Model.ProductID" />
+		<div class="row">
+			<div class="col-md-5">
+				<select name="tagId" class="form-select" required>
+					<option value="">
+						Select Tag
+					</option>
+					@foreach (var tag in Model.AvailableTags)
+					{
+						<option value="@tag.Id">
+							@tag.TagTitle
+						</option>
+					}
+				</select>
+			</div>
+			<div class="col-md-3">
+				<button type="submit" class="btn btn-outline-primary">Add</button>
+			</div>
+		</div>
+	</form>
+	<hr />
+	<h4>Product Colors That Has Been Selected...</h4>
+	@if (Model.ProductTags == null || !Model.ProductTags.Any())
+	{
+		<div class="alert alert-warning">
+			There Is No Tag For This Product...
+		</div>
+	}
+	else
+	{
+		<div class="table-responsive-md">
+			<table class="table table-dark table-striped-columns table-hover table-bordered">
+				<thead>
+					<tr>
+						<th>
+							Rows
+						</th>
+						<th>
+							Tag ID
+						</th>
+						<th>
+							Tag Title
+						</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.ProductTags)
+					{
+						<tr>
+							<td>
+								@rowNumbers
+							</td>
+							<td>
+								@item.TagID
+							</td>
+							<td>
+								@item.TagTitle
+							</td>
+							<td>
+								<form asp-area="Admin" asp-controller="ProductTag" asp-action="Remove" method="post"
+									  onsubmit="return confirm('Are You Sure You Want To Delete This Tag From Product?')">
+									@Html.AntiForgeryToken()
+									<input type="hidden" name="productId" value="@Model.ProductID" />
+									<input type="hidden" name="tagId" value="@item.TagID" />
+									<button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+								</form>
+							</td>
+						</tr>
+						rowNumbers += 1;
+					}
+				</tbody>
+			</table>
+		</div>
+
+	}
+</div>

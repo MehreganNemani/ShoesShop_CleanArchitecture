@@ -1,0 +1,54 @@
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using ShoesShop.Application.Contracts.Identity;
+using ShoesShop.Application.Identity;
+using ShoesShop.Identity.Models;
+using ShoesShop.Identity.Services;
+using System.Text;
+
+namespace ShoesShop.Identity
+{
+	public static class IdentityServicesRegistration
+	{
+		public static IServiceCollection ConfigureIdentityServices(this IServiceCollection services,
+																		IConfiguration configuration)
+		{
+			services.Configure<JWTSettings>(configuration.GetSection("JwtSettings"));
+			services.AddDbContext<ShoesShopIdentityDbContext>(options =>
+			{
+				options.UseSqlServer(configuration.GetConnectionString("ShoesShopIdentityConnectionString"),
+					b => b.MigrationsAssembly(typeof(ShoesShopIdentityDbContext).Assembly.FullName));
+			});
+
+			services.AddIdentity<ApplicationUser, IdentityRole>()
+				.AddEntityFrameworkStores<ShoesShopIdentityDbContext>()
+				.AddDefaultTokenProviders();
+
+			services.AddScoped<IAuthService, AuthService>();
+			services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			}).AddJwtBearer(o =>
+			{
+				o.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					ValidateIssuer = true,
+					ValidateAudience = true,
+					ValidateLifetime = true,
+					ClockSkew = TimeSpan.Zero,
+					ValidIssuer = configuration["JwtSettings:Issuer"],
+					ValidAudience = configuration["JwtSettings:Audience"],
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Key"]))
+				};
+			});
+
+			return services;
+		}
+	}
+}

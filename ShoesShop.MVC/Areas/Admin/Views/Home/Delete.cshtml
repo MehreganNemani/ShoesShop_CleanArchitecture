@@ -1,0 +1,41 @@
+﻿@model ProductVM
+
+@{
+	ViewData["Title"] = "Remove Product";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+
+<div class="alert alert-warning">
+	Are You Sure You Want To Delete @Model.ProductName ?
+</div>
+
+
+<dl class="row">
+	<dt class="col-sm-2">
+		Code :
+	</dt>
+	<dd class="col-sm-10">
+		@Model.ProductCode
+	</dd>
+	<dt class="col-sm-2">
+		Product Name :
+	</dt>
+	<dd class="col-sm-10">
+		@Model.ProductName
+	</dd>
+	<dt class="col-sm-2">
+		Product Model :
+	</dt>
+	<dd class="col-sm-10">
+		@Model.ProductModel
+	</dd>
+</dl>
+
+<form asp-area="Admin" asp-controller="Home" asp-action="DeleteConfirm" method="post">
+	@Html.AntiForgeryToken()
+	<input type="hidden" name="Id" value="@Model.Id" />
+	<button type="submit" class="btn btn-danger">Remove</button> | <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-secondary">Go Back</a>
+</form>

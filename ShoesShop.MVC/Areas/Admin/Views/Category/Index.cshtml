@@ -1,0 +1,104 @@
+﻿@model List<CategoryVM>
+@{
+	ViewData["Title"] = "Category Management";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+	int rowNumbers = 1;
+}
+
+<h4>@ViewData["Title"]</h4>
+<a asp-area="Admin" asp-controller="Category" asp-action="Create" class="btn btn-outline-primary">Create</a>
+<hr />
+@if (TempData["Success"] != null)
+{
+	<div class="alert alert-success">
+		@TempData["Success"]
+	</div>
+}
+
+@if (TempData["Error"] != null)
+{
+	<div class="alert alert-danger">
+		@TempData["Error"]
+	</div>
+}
+
+<form asp-area="Admin" asp-controller="Category" asp-action="Index" method="get" class="row g-2 mb-3">
+	<div class="col-md-8">
+		<input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Search..." />
+	</div>
+	<div class="col-md-4">
+
+		<button type="submit" class="btn btn-secondary">Search...</button>
+		<a asp-area="Admin" asp-controller="Category" asp-action="Index" class="btn btn-primary">Reset</a>
+
+	</div>
+</form>
+
+<div class="table-responsive-md">
+	<table class="table table-dark table-striped-columns table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>
+					Rows
+				</th>
+				<th>
+					Category Name
+				</th>
+				<th>
+					Category Code
+				</th>
+				<th>
+					Category Parent
+				</th>
+				<th>
+					Create Date
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@rowNumbers
+					</td>
+					<td>
+						@item.CategoryName
+					</td>
+					<td>
+						@item.Code
+					</td>
+					<td>
+						@if (item.ParentId.HasValue)
+						{
+							<span class="text-white">
+								@(item.ParentName ?? "-")
+							</span>
+						}
+						else
+						{
+							<span class="badge bg-primary">
+								Main Category
+							</span>
+						}
+					</td>
+					<td>
+						@item.CreateDate.ToString("yyyy/MM/dd")
+					</td>
+					<td>
+						<a asp-area="Admin" asp-controller="Category" asp-action="Edit" asp-route-Id="@item.Id" class="btn btn-outline-warning text-white">Edit</a>
+
+						<form asp-area="Admin" asp-controller="Category" asp-action="Delete" asp-route-Id="@item.Id" method="post" style="display:inline;">
+							@Html.AntiForgeryToken()
+							<button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are You Sure You Want To Delete This Category');">
+								Delete
+							</button>
+						</form>
+					</td>
+				</tr>
+				rowNumbers += 1;
+			}
+		</tbody>
+	</table>
+</div>

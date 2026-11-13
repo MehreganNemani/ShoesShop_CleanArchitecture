@@ -1,0 +1,47 @@
+﻿@model CreateProductVM
+
+@{
+	ViewData["Title"] = "Create Product";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>@ViewData["Title"]</h4>
+<hr />
+<form asp-area="Admin" asp-controller="Home" asp-action="Create" class="w-50 mx-auto mt-5 border rounded p-3">
+	@Html.AntiForgeryToken()
+	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+	<div class="form-group">
+		<label asp-for="ProductName" class="control-label"></label>
+		<input asp-for="ProductName" class="form-control" />
+		<span asp-validation-for="ProductName" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="ProductModel" class="control-label"></label>
+		<input asp-for="ProductModel" class="form-control" />
+		<span asp-validation-for="ProductModel" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="ProductCode" class="control-label"></label>
+		<input asp-for="ProductCode" class="form-control" />
+		<span asp-validation-for="ProductCode" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="ProductPrice" class="control-label"></label>
+		<input asp-for="ProductPrice" class="form-control" />
+		<span asp-validation-for="ProductPrice" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="ProductDesc" class="control-label"></label>
+		<textarea class="form-control" asp-for="ProductDesc" rows="10"></textarea>
+		<span asp-validation-for="ProductDesc" class="text-danger"></span>
+	</div>
+	<div class="form-check mt-1">
+		<input type="checkbox" asp-for="IsAvailable" class="form-check-input"  />
+		<label asp-for="IsAvailable" class="form-check-label">Is Available</label>
+	</div>
+	<div class="form-check mt-1">
+		<input type="checkbox" asp-for="ShowInSlider" class="form-check-input"  />
+		<label asp-for="ShowInSlider" class="form-check-label">Show In Slider</label>
+	</div>
+	<input type="submit" value="Create" class="btn btn-outline-primary form-control mt-2" />
+</form>

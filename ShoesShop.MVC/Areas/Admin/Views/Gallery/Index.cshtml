@@ -1,0 +1,82 @@
+﻿@model GalleryIndexVM
+
+@{
+	ViewData["Title"] = "Product Gallery";
+	Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Product Name : @Model.ProductName</h4>
+<h4>Product Code : @Model.ProductCode</h4>
+<a asp-area="Admin" asp-controller="Gallery" asp-action="Upload" asp-route-productId="@Model.ProductId" class="btn btn-outline-primary">Upload</a>
+<hr />
+@if (TempData["Error"] != null)
+{
+	<div class="alert alert-danger">
+		@TempData["Error"]
+	</div>
+}
+
+@if (TempData["Success"] != null)
+{
+	<div class="alert alert-success">
+		@TempData["Success"]
+	</div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+	<div class="alert alert-danger">
+		@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+		{
+			<div>
+				@error.ErrorMessage
+			</div>
+		}
+	</div>
+
+}
+
+@if (Model.Images.Count == 0)
+{
+	<div class="alert alert-info">
+		There Is No Image For This Product...
+	</div>
+}
+else
+{
+	<div class="row">
+		@foreach (var image in Model.Images)
+		{
+			<div class="col-md-3 mb-4" key="@image.Id">
+				<div class="card h-100">
+					<img src="@(Model.ImageBaseUrl + image.ImageName)"
+						 class="card-img-top w-100 h-100" alt="Product Image" />
+					<div class="card-body">
+						@if (image.IsMain)
+						{
+							<span class="badge bg-success">
+								Main Image
+							</span>
+						}
+						else
+						{
+							<form asp-area="Admin" asp-controller="Gallery" asp-action="SetMain" method="post">
+								@Html.AntiForgeryToken()
+								<input type="hidden" name="id" value="@image.Id" />
+								<input type="hidden" name="productId" value="@image.ProductId" />
+								<button type="submit" class="btn btn-outline-primary btn-sm">Select Main Image</button>
+							</form>
+						}
+
+						<form asp-area="Admin" asp-controller="Gallery" asp-action="Delete" method="post" class="mt-2" onsubmit="return confirm('Are You Sure You Want To Delete This Image?')">
+							@Html.AntiForgeryToken()
+							<input type="hidden" name="id" value="@image.Id" />
+							<input type="hidden" name="productId" value="@image.ProductId" />
+							<button type="submit" class="btn btn-outline-danger btn-sm">Remove Image</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}

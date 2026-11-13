@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="~/Libararies/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/Libararies/AdminCss.css" />
+	<title>@ViewData["Title"]</title>
+</head>
+<body>
+	<div id="mySidepanel" class="sidepanel">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a asp-area="Admin" asp-controller="Home" asp-action="Index">Products</a>
+		<a asp-area="Admin" asp-controller="Color" asp-action="Index">Colors</a>
+		<a asp-area="Admin" asp-controller="Tag" asp-action="Index">Tags</a>
+		<a asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
+	</div>
+	<div class="TopSideBar">
+		<button class="openbtn" onclick="openNav()">&#9776; Menu</button>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				@RenderBody()
+			</div>
+		</div>
+	</div>
+	<script src="~/Libararies/bootstrap.bundle.min.js"></script>
+	<script src="~/Libararies/jQuery.js"></script>
+	<script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+	<script src="~/Libararies/AdminJs.js"></script>
+	@await RenderSectionAsync("AdminScripts", required: false)
+</body>
+</html>
